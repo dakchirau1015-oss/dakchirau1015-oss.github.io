@@ -131,9 +131,10 @@
 
   /* blog — compact card */
   .blog{padding:70px 20px}
-  .blog .inner{max-width:560px}
+  .blog .inner{max-width:1160px}
   .blog h2{font-size:clamp(22px,3vw,28px)}
-  .blog-card{display:flex;align-items:stretch;background:#fff;border:1px solid #e7e7e7;border-radius:12px;overflow:hidden;transition:.25s;margin:28px auto 0;text-align:left}
+  .blog-grid{display:flex;gap:24px;margin:28px auto 0;max-width:1160px}
+  .blog-card{display:flex;align-items:stretch;background:#fff;border:1px solid #e7e7e7;border-radius:12px;overflow:hidden;transition:.25s;text-align:left;flex:1;min-width:0}
   .blog-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.12);border-color:var(--naver)}
   .blog-card img{width:38%;object-fit:cover;display:block}
   .blog-body{padding:16px 18px;flex:1}
@@ -141,6 +142,7 @@
   .blog-body h3{font-size:15px;font-weight:800;margin-bottom:4px;letter-spacing:-.01em;line-height:1.45}
   .blog-body p{display:none}
   .blog-body .more{display:inline-block;margin-top:6px;color:var(--blue);font-weight:800;font-size:13px}
+  @media(max-width:700px){.blog-grid{flex-direction:column}}
 
   /* cta */
   .cta{background:linear-gradient(135deg,#191919,#2b2b2b);color:#fff;text-align:center;padding:120px 20px;position:relative;overflow:hidden}
@@ -322,15 +324,25 @@
   <div class="inner">
     <span class="eyebrow">BLOG</span>
     <h2>칼럼으로 먼저 확인해 보세요</h2>
-    <a class="blog-card" href="https://blog.naver.com/dlfrhkd13/224345663520" target="_blank" rel="noopener">
-      <img src="blog-thumb.png" alt="네이버 플레이스 순위보다 중요한 것 — 블로그 칼럼 대표 이미지">
-      <div class="blog-body">
-        <span class="blog-tag">NAVER BLOG</span>
-        <h3>네이버 플레이스 순위보다 중요한 것, 매출이 달라지는 운영 방법</h3>
-        <p>많은 사장님들이 네이버 플레이스 순위만 올라가면 매출도 자연스럽게 따라올 것이라고 생각합니다. 그런데…</p>
-        <span class="more">블로그에서 전체 글 읽기 →</span>
-      </div>
-    </a>
+    <div class="blog-grid">
+      <a class="blog-card" href="https://blog.naver.com/dlfrhkd13/224345663520" target="_blank" rel="noopener">
+        <img src="blog-thumb.png" alt="네이버 플레이스 순위보다 중요한 것 — 블로그 칼럼 대표 이미지">
+        <div class="blog-body">
+          <span class="blog-tag">NAVER BLOG</span>
+          <h3>네이버 플레이스 순위보다 중요한 것, 매출이 달라지는 운영 방법</h3>
+          <p>많은 사장님들이 네이버 플레이스 순위만 올라가면 매출도 자연스럽게 따라올 것이라고 생각합니다. 그런데…</p>
+          <span class="more">블로그에서 전체 글 읽기 →</span>
+        </div>
+      </a>
+      <a class="blog-card" href="https://blog.naver.com/dlfrhkd13/224365839470" target="_blank" rel="noopener">
+        <img src="blog-thumb2.png" alt="플레이스 마케팅 - 순위,메타,블로그 등 나의 매장에 맞는 마케팅 블로그 칼럼 대표 이미지">
+        <div class="blog-body">
+          <span class="blog-tag">NAVER BLOG</span>
+          <h3>플레이스 마케팅 - 순위,메타,블로그 등 나의 매장에 맞는 마케팅</h3>
+          <span class="more">블로그에서 전체 글 읽기 →</span>
+        </div>
+      </a>
+    </div>
   </div>
 </section>
 
