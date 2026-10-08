@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>게시판 — 유광일 본부장 칼럼 | Y-PLUS 와이플러스</title>
+<meta name="description" content="6년 현업 온라인 마케터 유광일 본부장이 직접 쓰는 쿠팡·스마트스토어·플레이스 마케팅 이야기.">
+<link rel="canonical" href="https://yydplus.co.kr/board/">
+<link rel="icon" href="https://yydplus.co.kr/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="https://yydplus.co.kr/favicon-32.png">
+<link rel="apple-touch-icon" href="https://yydplus.co.kr/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yydplus.co.kr/board/">
+<meta property="og:title" content="게시판 — 유광일 본부장 칼럼 | Y-PLUS 와이플러스">
+<meta property="og:description" content="6년 현업 온라인 마케터 유광일 본부장이 직접 쓰는 쿠팡·스마트스토어·플레이스 마케팅 이야기.">
+<meta property="og:image" content="https://yydplus.co.kr/yplus-share.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="/site.css?v=4">
+</head>
+<body>
+<header>
+  <div class="inner nav">
+    <a class="brand" href="/" aria-label="Y-PLUS 홈"><span class="brand-logo"><img src="/logo.png" alt=""></span><span><b>Y-PLUS</b><small>ONLINE MARKETING</small></span></a>
+    <ul class="menu" id="menu">
+      <li><a href="/#about">소개</a></li>
+      <li><a href="/products/">서비스상품</a></li>
+      <li><a href="/#perf">진행사례</a></li>
+      <li><a href="/board/" class="on">게시판</a></li>
+      <li><a href="/#contact">문의</a></li>
+      <li><a href="/#guide">상담안내</a></li>
+    </ul>
+    <a class="tel" href="tel:010-3046-7649"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>010-3046-7649</a>
+    <button class="burger" id="burger" aria-label="메뉴 열기" aria-expanded="false">☰</button>
+  </div>
+</header>
+<section class="sub-hero"><div class="inner"><span class="en">COLUMN</span><h1>게시판</h1><p>유광일 본부장이 현장에서 직접 쓰는 온라인 마케팅 이야기</p></div></section>
+<div class="inner board">
+  <div class="b-filter" id="bFilter" hidden><span>#<b id="bTag"></b> 글만 보는 중</span><a href="/board/">전체 보기</a></div>
+  <div class="b-empty">아직 올라온 글이 없습니다. 곧 첫 글이 올라옵니다.</div>
+</div>
+<footer>
+  <div class="inner">
+    <div>
+      <div class="brand"><span class="brand-logo"><img src="/logo.png" alt=""></span><span><b>Y-PLUS</b><small>ONLINE MARKETING</small></span></div>
+      <p>(주)JS컴퍼니&amp;흐름컴퍼니 | 대표자 : 박준성 &amp; 손동혁 | 사업자등록번호 : 899-87-04241</p>
+      <p>주소 : 인천시 부평구 주부토로 236 테크노밸리 U1센터 B동 912호</p>
+      <p>담당 : 유광일 본부장 | 메일 : dakchirau1015@gmail.com | 카카오톡 : uilgg</p>
+      <p>고객센터 : 070-7706-8000 | 팩스 : 032-330-8001</p>
+      <p style="margin-top:18px">© 2026 JS COMPANY &amp; FLOW COMPANY. All rights reserved.</p>
+    </div>
+    <div class="right">
+      <a class="ftel" href="tel:010-3046-7649">010-3046-7649</a>
+      <p>카카오톡 상담은 언제든 남겨 주세요</p>
+      <div class="links"><a href="/products/">서비스상품</a><a href="https://open.kakao.com/o/szJtwKyi" target="_blank" rel="noopener">카카오톡 상담</a></div>
+    </div>
+  </div>
+</footer>
+<div class="float-bar" id="floatBar"><p><em>채널별 맞춤 무료진단</em>을 해주는 업계 1% 마케터 Y-PLUS</p><a class="btn btn-main" href="/#contact">무료진단 신청</a></div>
+<script>
+(function(){
+  var b=document.getElementById("burger"),m=document.getElementById("menu");
+  b.addEventListener("click",function(){b.setAttribute("aria-expanded",m.classList.toggle("open"));});
+  var f=document.getElementById("floatBar");
+  function s(){f.classList.toggle("show",scrollY>300);}
+  addEventListener("scroll",s,{passive:true});s();
+})();
+</script>
+<script>
+(function(){
+  var tag=new URLSearchParams(location.search).get("tag");if(!tag)return;
+  [].forEach.call(document.querySelectorAll(".b-card"),function(c){c.hidden=c.dataset.tags.split("|").indexOf(tag)<0;});
+  [].forEach.call(document.querySelectorAll(".b-tags a"),function(a){a.classList.toggle("on",a.dataset.tag===tag);});
+  document.getElementById("bTag").textContent=tag;document.getElementById("bFilter").hidden=false;
+})();
+</script>
+</body>
+</html>

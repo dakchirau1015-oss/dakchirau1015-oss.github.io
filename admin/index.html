@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>게시판 관리자 | Y-PLUS</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="/site.css?v=4">
+<style>
+  body{background:var(--bg)}
+  .adm{max-width:900px;margin:0 auto;padding:30px 20px 120px}
+  .adm-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:30px}
+  .adm-top h1{font-size:22px;font-weight:800}
+  .adm-top h1 small{display:block;font-size:12px;color:var(--mute);font-weight:500;margin-top:2px}
+  .box{background:var(--card);border-radius:20px;padding:26px}
+  .box+.box{margin-top:16px}
+  label.l{display:block;font-size:14px;font-weight:700;margin:0 0 8px}
+  label.l small{color:var(--mute);font-weight:500;margin-left:6px}
+  .in{width:100%;background:var(--bg);border:1px solid rgba(255,255,255,.16);border-radius:10px;color:#fff;font:inherit;font-size:16px;padding:13px 14px;outline:none}
+  .in:focus{border-color:var(--main)}
+  .field{margin-bottom:20px}
+  .row{display:flex;gap:8px;flex-wrap:wrap}
+  .btn-s{height:40px;padding:0 16px;font-size:14px}
+  .btn-red{background:rgba(255,80,80,.14);color:#ff8a8a}
+  .btn-red:hover{background:rgba(255,80,80,.24)}
+  .muted{color:var(--mute);font-size:14px}
+  .howto{margin-top:18px;font-size:14px;color:var(--mute);line-height:1.8}
+  .howto ol{padding-left:1.3em;margin-top:6px}
+  .howto b{color:#fff}
+  .list .item{display:flex;align-items:center;gap:12px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .list .item:last-child{border-bottom:0}
+  .list .item div{flex:1;min-width:0}
+  .list .item b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .list .item span{font-size:13px;color:var(--mute)}
+  .toolbar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:4px;background:var(--card2);border-radius:12px 12px 0 0;padding:8px;border:1px solid rgba(255,255,255,.16);border-bottom:0}
+  .toolbar button{background:transparent;border:0;color:#fff;font:inherit;font-size:14px;font-weight:700;padding:8px 11px;border-radius:8px;cursor:pointer}
+  .toolbar button:hover{background:rgba(255,255,255,.08)}
+  .editor{min-height:420px;background:var(--bg);border:1px solid rgba(255,255,255,.16);border-radius:0 0 12px 12px;padding:22px;outline:none}
+  .editor:empty::before{content:"여기에 본문을 쓰세요. 사진은 위의 [사진] 버튼으로 넣습니다.";color:var(--mute)}
+  .editor.post-body{padding-top:22px}
+  .editor img{max-width:100%;outline:2px dashed transparent}
+  .editor img:hover{outline-color:var(--main)}
+  .bar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(17,16,20,.95);backdrop-filter:blur(10px);border-top:1px solid var(--line)}
+  .bar .in2{max-width:900px;margin:0 auto;padding:12px 20px;display:flex;gap:8px;justify-content:flex-end;align-items:center}
+  .bar .st{margin-right:auto;font-size:14px;color:var(--mute)}
+  .hide{display:none!important}
+  .msg{margin-top:12px;font-size:14px;color:#ff8a8a}
+  .ok{color:var(--point)}
+</style>
+</head>
+<body>
+<div class="adm">
+  <div class="adm-top">
+    <h1>게시판 관리자<small>Y-PLUS · 유광일 본부장 칼럼</small></h1>
+    <div class="row">
+      <a class="btn btn-dark btn-s" href="/board/" target="_blank" rel="noopener">게시판 보기</a>
+      <button class="btn btn-dark btn-s hide" id="logoutBtn">로그아웃</button>
+    </div>
+  </div>
+
+  <!-- 로그인 -->
+  <section id="vLogin" class="box hide">
+    <label class="l" for="tokenIn">관리자 열쇠 (GitHub 토큰)</label>
+    <input class="in" id="tokenIn" type="password" autocomplete="off" placeholder="github_pat_ 로 시작하는 열쇠를 붙여넣기">
+    <div class="row" style="margin-top:14px"><button class="btn btn-main" id="loginBtn">로그인</button></div>
+    <p class="msg" id="loginMsg"></p>
+    <div class="howto">
+      한 번 넣으면 이 기기에서는 기억합니다. 열쇠가 없으면 만드는 방법:
+      <ol>
+        <li>GitHub에 <b>dakchirau1015-oss</b> 계정으로 로그인</li>
+        <li>Settings → Developer settings → Personal access tokens → <b>Fine-grained tokens</b> → Generate new token</li>
+        <li>Repository access: <b>Only select repositories</b> → dakchirau1015-oss.github.io</li>
+        <li>Permissions → Repository permissions → <b>Contents: Read and write</b></li>
+        <li>만들어진 열쇠를 위 칸에 붙여넣기</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 글 목록 -->
+  <section id="vList" class="hide">
+    <div class="box">
+      <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:6px">
+        <b style="font-size:18px">올라간 글</b>
+        <button class="btn btn-main btn-s" id="newBtn">+ 새 글 쓰기</button>
+      </div>
+      <div class="list" id="postList"><p class="muted">불러오는 중…</p></div>
+    </div>
+  </section>
+
+  <!-- 글쓰기 -->
+  <section id="vEdit" class="hide">
+    <div class="box">
+      <div class="field"><label class="l" for="fTitle">제목</label><input class="in" id="fTitle" placeholder="글 제목"></div>
+      <div class="field"><label class="l" for="fSlug">글 주소<small>yydplus.co.kr/board/<b id="slugShow"></b>/ · 처음 발행 후에는 바뀌지 않아요</small></label><input class="in" id="fSlug" placeholder="제목에서 자동으로 만들어져요"></div>
+      <div class="field"><label class="l" for="fSum">요약<small>(선택) 목록과 검색결과에 나오는 한두 줄. 비우면 본문 앞부분을 씁니다</small></label><input class="in" id="fSum" placeholder=""></div>
+      <div class="field">
+        <label class="l">본문</label>
+        <div class="toolbar" id="toolbar">
+          <button type="button" data-cmd="formatBlock" data-val="P">본문</button>
+          <button type="button" data-cmd="formatBlock" data-val="H2">큰 제목</button>
+          <button type="button" data-cmd="formatBlock" data-val="H3">작은 제목</button>
+          <button type="button" data-cmd="bold"><b>굵게</b></button>
+          <button type="button" data-cmd="insertUnorderedList">• 목록</button>
+          <button type="button" data-cmd="insertOrderedList">1. 목록</button>
+          <button type="button" data-cmd="formatBlock" data-val="BLOCKQUOTE">강조 박스</button>
+          <button type="button" id="linkBtn">링크</button>
+          <button type="button" id="imgBtn">사진</button>
+        </div>
+        <div class="editor post-body" id="editor" contenteditable="true"></div>
+        <input type="file" id="imgFile" accept="image/*" multiple hidden>
+      </div>
+      <div class="field"><label class="l" for="fTags">해시태그<small>쉼표나 띄어쓰기로 구분 · 예) 쿠팡마케팅, 플레이스, 매출</small></label><input class="in" id="fTags" placeholder="쿠팡마케팅 플레이스 매출"></div>
+    </div>
+    <div class="row" style="margin-top:16px"><button class="btn btn-red btn-s hide" id="delBtn">이 글 삭제</button></div>
+  </section>
+</div>
+
+<div class="bar hide" id="editBar"><div class="in2">
+  <span class="st" id="status"></span>
+  <button class="btn btn-dark btn-s" id="backBtn">목록</button>
+  <button class="btn btn-dark btn-s" id="previewBtn">미리보기</button>
+  <button class="btn btn-main btn-s" id="publishBtn">발행</button>
+</div></div>
+
+<script src="/admin/render.js"></script>
+<script>
+(function(){
+  var OWNER = 'dakchirau1015-oss', REPO = 'dakchirau1015-oss.github.io', BRANCH = 'main';
+  var API = 'https://api.github.com/repos/' + OWNER + '/' + REPO;
+  // 이 컴퓨터에서 시험할 때만 가짜 GitHub(/mockgh)로 보낸다
+  if (location.hostname === 'localhost' && new URLSearchParams(location.search).has('mockapi')) API = '/mockgh/repos/' + OWNER + '/' + REPO;
+  var R = window.BoardRender;
+  var $ = function(id){ return document.getElementById(id); };
+  var token = null, posts = [], editing = null, images = {};
+
+  // ---------- 저장된 열쇠 ----------
+  function loadToken(){ try { return localStorage.getItem('ypAdminToken'); } catch (e) { return null; } }
+  function saveToken(t){ try { t ? localStorage.setItem('ypAdminToken', t) : localStorage.removeItem('ypAdminToken'); } catch (e) {} }
+
+  // ---------- GitHub API ----------
+  function gh(path, opt){
+    opt = opt || {};
+    return fetch(API + path, {
+      method: opt.method || 'GET',
+      headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' },
+      body: opt.body ? JSON.stringify(opt.body) : undefined,
+      cache: 'no-store'
+    }).then(function(r){
+      if (r.status === 404 && opt.allow404) return null;
+      if (!r.ok) return r.text().then(function(t){ throw new Error(r.status + ' ' + t.slice(0, 200)); });
+      return r.status === 204 ? null : r.json();
+    });
+  }
+  function b64ToText(b64){
+    var bin = atob(b64.replace(/\n/g, '')), bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder('utf-8').decode(bytes);
+  }
+  function readJson(path){
+    return gh('/contents/' + path + '?ref=' + BRANCH, { allow404: true }).then(function(r){
+      return r ? JSON.parse(b64ToText(r.content)) : null;
+    });
+  }
+  // 여러 파일을 한 번에 커밋 (files: [{path, content}|{path, base64}|{path, remove:true}])
+  function commit(files, message){
+    var base;
+    return gh('/git/ref/heads/' + BRANCH).then(function(ref){
+      base = ref.object.sha;
+      return gh('/git/commits/' + base);
+    }).then(function(c){
+      return Promise.all(files.map(function(f){
+        if (f.remove) return Promise.resolve({ path: f.path, mode: '100644', type: 'blob', sha: null });
+        if (f.base64) return gh('/git/blobs', { method: 'POST', body: { content: f.base64, encoding: 'base64' } })
+          .then(function(b){ return { path: f.path, mode: '100644', type: 'blob', sha: b.sha }; });
+        return Promise.resolve({ path: f.path, mode: '100644', type: 'blob', content: f.content });
+      })).then(function(tree){
+        return gh('/git/trees', { method: 'POST', body: { base_tree: c.tree.sha, tree: tree } });
+      });
+    }).then(function(t){
+      return gh('/git/commits', { method: 'POST', body: { message: message, tree: t.sha, parents: [base] } });
+    }).then(function(nc){
+      return gh('/git/refs/heads/' + BRANCH, { method: 'PATCH', body: { sha: nc.sha } });
+    });
+  }
+
+  // ---------- 화면 전환 ----------
+  function show(v){
+    ['vLogin', 'vList', 'vEdit'].forEach(function(id){ $(id).classList.toggle('hide', id !== v); });
+    $('editBar').classList.toggle('hide', v !== 'vEdit');
+    $('logoutBtn').classList.toggle('hide', v === 'vLogin');
+    scrollTo(0, 0);
+  }
+  function status(t, ok){ $('status').textContent = t || ''; $('status').className = 'st' + (ok ? ' ok' : ''); }
+
+  // ---------- 로그인 ----------
+  function tryLogin(t){
+    token = t;
+    return gh('').then(function(repo){
+      if (!repo.permissions || !repo.permissions.push) throw new Error('이 열쇠로는 글을 쓸 수 없어요 (Contents 쓰기 권한 확인)');
+      saveToken(t); return loadList();
+    });
+  }
+  $('loginBtn').onclick = function(){
+    var t = $('tokenIn').value.trim();
+    if (!t) return;
+    $('loginMsg').textContent = '확인 중…';
+    tryLogin(t).then(function(){ $('tokenIn').value = ''; $('loginMsg').textContent = ''; },
+      function(e){ token = null; $('loginMsg').textContent = '로그인 실패: ' + (/401/.test(e.message) ? '열쇠가 틀렸거나 만료됐어요' : e.message); });
+  };
+  $('logoutBtn').onclick = function(){ saveToken(null); token = null; show('vLogin'); };
+
+  // ---------- 글 목록 ----------
+  function loadList(){
+    show('vList');
+    $('postList').innerHTML = '<p class="muted">불러오는 중…</p>';
+    return readJson('board/posts.json').then(function(p){
+      posts = p || [];
+      var sorted = posts.slice().sort(function(a, b){ return a.date < b.date ? 1 : -1; });
+      $('postList').innerHTML = sorted.length ? '' : '<p class="muted">아직 글이 없어요. [+ 새 글 쓰기]로 첫 글을 올려보세요.</p>';
+      sorted.forEach(function(p){
+        var d = document.createElement('div'); d.className = 'item';
+        d.innerHTML = '<div><b></b><span></span></div><a class="btn btn-dark btn-s" target="_blank" rel="noopener">보기</a><button class="btn btn-main btn-s">수정</button>';
+        d.querySelector('b').textContent = p.title;
+        d.querySelector('span').textContent = R.fmtDate(p.date) + ((p.tags || []).length ? ' · #' + p.tags.join(' #') : '');
+        d.querySelector('a').href = '/board/' + encodeURIComponent(p.slug) + '/';
+        d.querySelector('button').onclick = function(){ openEditor(p.slug); };
+        $('postList').appendChild(d);
+      });
+    });
+  }
+  $('newBtn').onclick = function(){ openEditor(null); };
+  $('backBtn').onclick = function(){
+    if (dirty && !confirm('저장하지 않은 내용이 사라져요. 목록으로 갈까요?')) return;
+    dirty = false; loadList();
+  };
+
+  // ---------- 글쓰기 ----------
+  var dirty = false;
+  function openEditor(slug){
+    images = {}; dirty = false; status('');
+    var ready = slug ? readJson('board/data/' + slug + '.json') : Promise.resolve(null);
+    ready.then(function(p){
+      editing = p;
+      $('fTitle').value = p ? p.title : '';
+      $('fSlug').value = p ? p.slug : '';
+      $('fSlug').disabled = !!p;
+      $('slugShow').textContent = p ? p.slug : '';
+      $('fSum').value = p ? (p.summary || '') : '';
+      $('fTags').value = p ? (p.tags || []).join(', ') : '';
+      $('editor').innerHTML = p ? p.content : '';
+      $('delBtn').classList.toggle('hide', !p);
+      show('vEdit');
+    }, function(e){ alert('글을 불러오지 못했어요: ' + e.message); });
+  }
+  $('fTitle').oninput = function(){
+    dirty = true;
+    if (!editing && !$('fSlug').dataset.touched) { $('fSlug').value = R.slugify($('fTitle').value); $('slugShow').textContent = $('fSlug').value; }
+  };
+  $('fSlug').oninput = function(){ $('fSlug').dataset.touched = '1'; $('slugShow').textContent = R.slugify($('fSlug').value); };
+  ['fSum', 'fTags'].forEach(function(id){ $(id).oninput = function(){ dirty = true; }; });
+  $('editor').oninput = function(){ dirty = true; };
+  addEventListener('beforeunload', function(e){ if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+  // 서식 버튼
+  $('toolbar').addEventListener('mousedown', function(e){ if (e.target.closest('button')) e.preventDefault(); });
+  [].forEach.call(document.querySelectorAll('#toolbar [data-cmd]'), function(b){
+    b.onclick = function(){ $('editor').focus(); document.execCommand(b.dataset.cmd, false, b.dataset.val || null); dirty = true; };
+  });
+  $('linkBtn').onclick = function(){
+    var url = prompt('연결할 주소 (https://...)');
+    if (url && /^https?:\/\//.test(url)) { $('editor').focus(); document.execCommand('createLink', false, url); dirty = true; }
+  };
+  // 붙여넣기는 글자만 (다른 곳 서식·색이 따라오지 않게)
+  $('editor').addEventListener('paste', function(e){
+    var items = e.clipboardData && e.clipboardData.files;
+    if (items && items.length) { e.preventDefault(); addImages(items); return; }
+    e.preventDefault();
+    var text = (e.clipboardData || window.clipboardData).getData('text/plain');
+    var html = text.split(/\n{2,}/).map(function(par){ return '<p>' + R.esc(par).replace(/\n/g, '<br>') + '</p>'; }).join('');
+    document.execCommand('insertHTML', false, html);
+  });
+
+  // 사진: 가로 1400px 이하 JPG로 줄여서 넣는다
+  $('imgBtn').onclick = function(){ $('imgFile').click(); };
+  $('imgFile').onchange = function(){ addImages(this.files); this.value = ''; };
+  function shrink(file){
+    return new Promise(function(res, rej){
+      var img = new Image(), url = URL.createObjectURL(file);
+      img.onload = function(){
+        var w = Math.min(1400, img.naturalWidth), h = Math.round(img.naturalHeight * w / img.naturalWidth);
+        var c = document.createElement('canvas'); c.width = w; c.height = h;
+        var g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, w, h); g.drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg', 0.85));
+      };
+      img.onerror = function(){ URL.revokeObjectURL(url); rej(new Error('사진을 읽지 못했어요')); };
+      img.src = url;
+    });
+  }
+  function addImages(files){
+    $('editor').focus();
+    [].slice.call(files).filter(function(f){ return /^image\//.test(f.type); }).reduce(function(p, f){
+      return p.then(function(){ return shrink(f); }).then(function(data){
+        document.execCommand('insertHTML', false, '<p><img src="' + data + '" alt=""></p><p><br></p>');
+        dirty = true;
+      });
+    }, Promise.resolve()).catch(function(e){ alert(e.message); });
+  }
+
+  // 본문 정리: 허용한 태그·속성만 남긴다
+  var KEEP = { P: 1, H2: 1, H3: 1, B: 1, STRONG: 1, I: 1, EM: 1, U: 1, A: 1, UL: 1, OL: 1, LI: 1, BLOCKQUOTE: 1, IMG: 1, BR: 1 };
+  function clean(node){
+    [].slice.call(node.childNodes).forEach(function(n){
+      if (n.nodeType === 3) return;
+      if (n.nodeType !== 1) { n.remove(); return; }
+      if (/^(SCRIPT|STYLE|IFRAME|OBJECT|EMBED|TEMPLATE|NOSCRIPT|META|LINK)$/.test(n.tagName)) { n.remove(); return; }
+      clean(n);
+      var tag = n.tagName;
+      if (tag === 'DIV') { var p = document.createElement('p'); while (n.firstChild) p.appendChild(n.firstChild); n.replaceWith(p); n = p; tag = 'P'; }
+      if (!KEEP[tag]) { while (n.firstChild) n.parentNode.insertBefore(n.firstChild, n); n.remove(); return; }
+      [].slice.call(n.attributes).forEach(function(a){
+        var ok = (tag === 'A' && a.name === 'href') || (tag === 'IMG' && (a.name === 'src' || a.name === 'alt'));
+        if (!ok) n.removeAttribute(a.name);
+      });
+      if (tag === 'A') {
+        if (!/^(https?:\/\/|\/)/.test(n.getAttribute('href') || '')) n.removeAttribute('href');
+        if (/^https?:\/\//.test(n.getAttribute('href') || '') && n.getAttribute('href').indexOf('yydplus.co.kr') < 0) { n.setAttribute('target', '_blank'); n.setAttribute('rel', 'noopener'); }
+      }
+      if ((tag === 'P' || tag === 'H2' || tag === 'H3') && !n.textContent.trim() && !n.querySelector('img')) n.remove();
+    });
+    return node;
+  }
+
+  function gather(){
+    var title = $('fTitle').value.trim();
+    var slug = editing ? editing.slug : R.slugify($('fSlug').value || title);
+    var tags = $('fTags').value.split(/[,\s]+/).map(function(t){ return t.replace(/^#+/, '').trim(); })
+      .filter(function(t, i, a){ return t && a.indexOf(t) === i; });
+    var box = document.createElement('div'); box.innerHTML = $('editor').innerHTML; clean(box);
+    return { title: title, slug: slug, summary: $('fSum').value.trim(), tags: tags, box: box };
+  }
+
+  $('previewBtn').onclick = function(){
+    var g = gather();
+    if (!g.title) { alert('제목을 써 주세요'); return; }
+    var now = new Date().toISOString();
+    var p = { title: g.title, slug: g.slug, summary: g.summary, tags: g.tags, content: g.box.innerHTML, date: editing ? editing.date : now, updated: now };
+    var html = R.renderPost(p, posts.filter(function(x){ return x.slug !== p.slug; }));
+    var w = window.open('', '_blank');
+    if (!w) { alert('팝업이 막혀 있어요. 팝업을 허용해 주세요.'); return; }
+    w.document.open(); w.document.write(html); w.document.close();
+  };
+
+  // ---------- 발행 ----------
+  function meta(p){ return { slug: p.slug, title: p.title, summary: p.summary, excerpt: R.summaryOf(p), tags: p.tags, date: p.date, updated: p.updated, cover: R.coverOf(p) }; }
+
+  // 목록·사이트맵·모든 글의 '다른 글'을 다시 만든다
+  function rebuild(list, changed){
+    return Promise.all(list.filter(function(m){ return !changed || m.slug !== changed.slug; }).map(function(m){
+      return readJson('board/data/' + m.slug + '.json');
+    })).then(function(datas){
+      var full = datas.filter(Boolean);
+      if (changed) full.push(changed);
+      var files = [
+        { path: 'board/posts.json', content: JSON.stringify(list, null, 1) + '\n' },
+        { path: 'board/index.html', content: R.renderList(list) },
+        { path: 'sitemap.xml', content: R.renderSitemap(list) }
+      ];
+      full.forEach(function(p){ files.push({ path: 'board/' + p.slug + '/index.html', content: R.renderPost(p, list) }); });
+      return files;
+    });
+  }
+
+  var busy = false;
+  $('publishBtn').onclick = function(){
+    if (busy) return;
+    var g = gather();
+    if (!g.title) { alert('제목을 써 주세요'); return; }
+    if (!R.textOf(g.box.innerHTML) && !g.box.querySelector('img')) { alert('본문을 써 주세요'); return; }
+    busy = true; status('최신 목록 확인 중…');
+    readJson('board/posts.json').then(function(latest){
+      posts = latest || [];
+      if (!editing && posts.some(function(p){ return p.slug === g.slug; })) {
+        g.slug = g.slug + '-' + Date.now().toString(36).slice(-4);
+      }
+      // 새로 넣은 사진(data:)을 파일로 바꾼다
+      var files = [], n = 0, stamp = Date.now().toString(36);
+      [].forEach.call(g.box.querySelectorAll('img'), function(img){
+        var src = img.getAttribute('src') || '';
+        if (src.indexOf('data:image/') !== 0) return;
+        var path = 'board/img/' + g.slug + '-' + stamp + '-' + (++n) + '.jpg';
+        files.push({ path: path, base64: src.split(',')[1] });
+        img.setAttribute('src', '/' + path);
+        if (!img.getAttribute('alt')) img.setAttribute('alt', g.title);
+      });
+      var now = new Date().toISOString();
+      var post = { slug: g.slug, title: g.title, summary: g.summary, tags: g.tags, content: g.box.innerHTML,
+        date: editing ? editing.date : now, updated: now, cover: '' };
+      var list = posts.filter(function(p){ return p.slug !== post.slug; }).concat([meta(post)]);
+      status(n ? '사진 ' + n + '장과 함께 올리는 중…' : '올리는 중…');
+      return rebuild(list, post).then(function(rest){
+        files.push({ path: 'board/data/' + post.slug + '.json', content: JSON.stringify(post, null, 1) + '\n' });
+        return commit(files.concat(rest), (editing ? '게시판 글 수정: ' : '게시판 새 글: ') + post.title);
+      }).then(function(){
+        dirty = false; editing = post; posts = list;
+        $('fSlug').value = post.slug; $('fSlug').disabled = true; $('slugShow').textContent = post.slug;
+        $('editor').innerHTML = post.content; $('delBtn').classList.remove('hide');
+        status('발행 완료! 1~2분 뒤 게시판에 보여요', true);
+      });
+    }).catch(function(e){
+      status('');
+      alert('발행 실패: ' + (/401/.test(e.message) ? '열쇠가 만료됐어요. 로그아웃 후 새 열쇠로 로그인해 주세요.' : e.message));
+    }).then(function(){ busy = false; });
+  };
+
+  $('delBtn').onclick = function(){
+    if (!editing || busy) return;
+    if (!confirm('"' + editing.title + '" 글을 삭제할까요? 게시판에서 사라집니다.')) return;
+    busy = true; status('삭제 중…');
+    var slug = editing.slug;
+    readJson('board/posts.json').then(function(latest){
+      var list = (latest || []).filter(function(p){ return p.slug !== slug; });
+      return rebuild(list, null).then(function(files){
+        files.push({ path: 'board/data/' + slug + '.json', remove: true }, { path: 'board/' + slug + '/index.html', remove: true });
+        return commit(files, '게시판 글 삭제: ' + editing.title);
+      });
+    }).then(function(){ dirty = false; busy = false; alert('삭제했어요. 1~2분 뒤 게시판에서 사라져요.'); loadList(); },
+      function(e){ busy = false; status(''); alert('삭제 실패: ' + e.message); });
+  };
+
+  // ---------- 시작 ----------
+  var saved = loadToken();
+  if (saved) tryLogin(saved).catch(function(){ token = null; saveToken(null); show('vLogin'); });
+  else show('vLogin');
+})();
+</script>
+</body>
+</html>
