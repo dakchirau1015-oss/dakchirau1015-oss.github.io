@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>서비스상품 | Y-PLUS 와이플러스 — 유광일 본부장</title>
+<meta name="description" content="쿠팡·스마트스토어·플레이스·통검탭·바이럴·트래픽·메타광고까지. 우리 매장·상품에 딱 맞는 마케팅만 설계합니다.">
+<link rel="canonical" href="https://yydplus.co.kr/products/">
+<link rel="icon" href="https://yydplus.co.kr/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="https://yydplus.co.kr/favicon-32.png">
+<link rel="apple-touch-icon" href="https://yydplus.co.kr/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yydplus.co.kr/products/">
+<meta property="og:title" content="서비스상품 | Y-PLUS 와이플러스">
+<meta property="og:description" content="우리 매장·상품에 딱 맞는 마케팅만, 업계 1% 마케터가 설계합니다.">
+<meta property="og:image" content="https://yydplus.co.kr/yplus-share.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="/site.css?v=3">
+<style>
+  /* 상단 제목 */
+  .sub-hero{position:relative;padding:150px 0 70px;overflow:hidden;text-align:center}
+  .sub-hero::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(40% 60% at 25% 20%,rgba(47,140,255,.25),transparent 70%),
+    radial-gradient(35% 50% at 80% 40%,rgba(123,92,255,.18),transparent 70%);pointer-events:none}
+  .sub-hero .inner{position:relative}
+  .sub-hero h1{font-size:clamp(34px,5vw,56px);font-weight:700;letter-spacing:-.035em}
+  .sub-hero p{color:rgba(255,255,255,.8);margin-top:14px;font-size:clamp(15px,1.6vw,17px)}
+
+  /* 왼쪽 목록 + 오른쪽 상세 */
+  .shop-wrap{display:grid;grid-template-columns:240px 1fr;gap:40px;align-items:start;padding:20px 0 120px}
+  .side{position:sticky;top:90px;background:var(--card);border-radius:20px;padding:12px}
+  .side h2{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--mute);padding:10px 12px 8px}
+  .side a{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;font-size:15px;font-weight:600;color:rgba(255,255,255,.78);transition:.15s}
+  .side a small{font-size:11px;font-weight:700;color:var(--mute)}
+  .side a:hover{background:rgba(255,255,255,.05);color:#fff}
+  .side a.on{background:var(--main);color:#fff}
+  .side a.on small{color:rgba(255,255,255,.8)}
+
+  .prod{display:none}
+  .prod.on{display:block;animation:fade .4s}
+  .p-head{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center;background:var(--card);border-radius:24px;padding:40px}
+  .p-tag{display:inline-block;font-size:12px;font-weight:700;color:#b6d4ff;background:rgba(47,140,255,.18);padding:4px 12px;border-radius:999px}
+  .p-head h2{font-size:clamp(28px,3.6vw,42px);font-weight:700;letter-spacing:-.03em;margin:14px 0 12px}
+  .p-head .lead{color:rgba(255,255,255,.82);font-size:16px}
+  .p-head .m-visual{aspect-ratio:4/3.4}
+  .p-block{margin-top:56px}
+  .p-block h3{font-size:clamp(20px,2.4vw,26px);font-weight:700;letter-spacing:-.02em;margin-bottom:18px}
+  .quote{background:linear-gradient(110deg,rgba(47,140,255,.16),rgba(123,92,255,.12));border:1px solid rgba(127,182,255,.25);border-radius:20px;padding:30px}
+  .quote b{display:block;font-size:clamp(19px,2.2vw,24px);margin-bottom:10px}
+  .quote p{color:rgba(255,255,255,.82)}
+  .fit{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .fit div{background:var(--card);border-radius:18px;padding:24px 22px}
+  .fit div::before{content:"✓";display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(63,242,160,.15);color:var(--point);font-weight:900;margin-bottom:14px}
+  .fit p{font-size:15px;font-weight:600}
+  .flow4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;counter-reset:f}
+  .flow4 div{position:relative;background:var(--card);border-radius:18px;padding:24px 20px}
+  .flow4 div::before{counter-increment:f;content:"0" counter(f);display:block;font-size:13px;font-weight:800;color:var(--point);margin-bottom:10px}
+  .flow4 b{display:block;font-size:16px;margin-bottom:6px}
+  .flow4 p{font-size:13.5px;color:var(--mute)}
+  .items{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .items div{background:var(--card);border-radius:18px;padding:24px}
+  .items b{display:block;font-size:17px;margin-bottom:8px}
+  .items p{font-size:14.5px;color:var(--mute)}
+  .p-cta{margin-top:56px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;border-radius:24px;padding:36px 40px;background:linear-gradient(110deg,#1f5fe0 0%,#5b4dff 60%,#8a3dff 100%)}
+  .p-cta b{font-size:clamp(19px,2.2vw,24px);font-weight:800;line-height:1.4}
+  .p-cta .btns{display:flex;gap:8px;flex-wrap:wrap}
+  .p-cta .btn{height:52px;padding:0 26px}
+  .p-cta .btn-w{background:#fff;color:#2b2bd6;font-weight:800}
+  .p-cta .btn-dark{background:rgba(0,0,0,.25)}
+  .p-link{display:inline-block;margin-top:18px;font-weight:700;color:#7fb6ff}
+
+  @media (max-width:900px){
+    .shop-wrap{grid-template-columns:1fr;gap:18px}
+    .side{position:sticky;top:64px;z-index:20;display:flex;gap:6px;overflow-x:auto;border-radius:0;margin:0 -20px;padding:10px 20px;background:rgba(17,16,20,.95);backdrop-filter:blur(10px);scrollbar-width:none}
+    .side::-webkit-scrollbar{display:none}
+    .side h2{display:none}
+    .side a{flex:none;padding:9px 16px;border-radius:999px;background:var(--card);font-size:14px}
+    .side a small{display:none}
+    .p-head{grid-template-columns:1fr;padding:28px 22px}
+    .fit{grid-template-columns:1fr}
+    .flow4{grid-template-columns:1fr 1fr}
+    .items{grid-template-columns:1fr}
+    .p-cta{padding:28px 22px}
+    .p-cta .btns,.p-cta .btn{width:100%}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner nav">
+    <a class="brand" href="/" aria-label="Y-PLUS 홈">
+      <span class="brand-logo"><img src="/logo.png" alt=""></span>
+      <span><b>Y-PLUS</b><small>ONLINE MARKETING</small></span>
+    </a>
+    <ul class="menu" id="menu">
+      <li><a href="/#about">소개</a></li>
+      <li><a href="/products/" class="on">서비스상품</a></li>
+      <li><a href="/#perf">진행사례</a></li>
+      <li><a href="/#faq">게시판</a></li>
+      <li><a href="/#contact">문의</a></li>
+      <li><a href="/#guide">상담안내</a></li>
+    </ul>
+    <a class="tel" href="tel:010-3046-7649"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>010-3046-7649</a>
+    <button class="burger" id="burger" aria-label="메뉴 열기" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<section class="sub-hero">
+  <div class="inner">
+    <span class="en">SERVICE</span>
+    <h1>서비스상품</h1>
+    <p>나에게 딱 맞는 마케팅만, 업계 1% 마케터가 설계합니다.</p>
+  </div>
+</section>
+
+<div class="inner shop-wrap">
+  <nav class="side" id="side" aria-label="서비스상품 목록">
+    <h2>MARKETING</h2>
+    <a href="#coupang" data-p="coupang">쿠팡 마케팅<small>쇼핑</small></a>
+    <a href="#smartstore" data-p="smartstore">스마트스토어 마케팅<small>쇼핑</small></a>
+    <a href="#place" data-p="place">플레이스 마케팅<small>매장</small></a>
+    <a href="#search" data-p="search">통검탭 노출<small>검색</small></a>
+    <a href="#viral" data-p="viral">바이럴 마케팅<small>콘텐츠</small></a>
+    <a href="#traffic" data-p="traffic">트래픽 마케팅<small>유입</small></a>
+    <a href="#meta" data-p="meta">메타광고 설계<small>광고</small></a>
+  </nav>
+
+  <main id="prods">
+
+    <article class="prod" id="p-coupang" data-ch="쿠팡">
+      <div class="p-head">
+        <div>
+          <span class="p-tag">쇼핑 · 쿠팡</span>
+          <h2>쿠팡 마케팅</h2>
+          <p class="lead">각 카테고리마다 검색량과 경쟁강도는 다릅니다. 상품에 맞춘 리뷰 및 트래픽 방향으로 검색노출을 만듭니다.</p>
+        </div>
+        <div class="m-visual mv-shop"><div class="phone-ui" style="--c:#e8392b"><div class="sb">🔍 카테고리 키워드</div><div class="it"><span class="th"></span><span class="ln"><i></i><i></i></span></div><div class="it me"><span class="th"></span><span class="ln"><i></i><i></i></span><span class="badge">우리 상품</span></div><div class="it"><span class="th"></span><span class="ln"><i></i><i></i></span></div></div><span class="big">SHOP</span></div>
+      </div>
+      <div class="p-block quote">
+        <b>리뷰만 쌓는다고 노출이 될까요? 아닙니다.</b>
+        <p>결국 카테고리 키워드에 맞춘 방향으로 진행되지 않으면 의미 없는 비용 낭비입니다. 6년 현업의 노하우로 검색노출을 이끌어내는 가이드를 설계해 드립니다.</p>
+      </div>
+      <div class="p-block"><h3>이런 분께 추천해요</h3>
+        <div class="fit"><div><p>신상품이라 리뷰와 검색 노출 기반이 부족한 경우</p></div><div><p>리뷰는 있는데 검색 순위가 오르지 않는 경우</p></div><div><p>카테고리 경쟁이 치열해 방향을 못 잡는 경우</p></div></div>
+      </div>
+      <div class="p-block"><h3>진행 방식</h3>
+        <div class="flow4"><div><b>카테고리 분석</b><p>검색량과 경쟁강도 확인</p></div><div><b>키워드 설계</b><p>상품에 맞는 공략 키워드 선정</p></div><div><b>리뷰 · 트래픽 운영</b><p>설계한 방향대로 실행</p></div><div><b>데이터 관리</b><p>판매 흐름 확인 후 강도 조정</p></div></div>
+      </div>
+    </article>
+
+    <article class="prod" id="p-smartstore" data-ch="스마트스토어">
+      <div class="p-head">
+        <div>
+          <span class="p-tag">쇼핑 · 네이버</span>
+          <h2>스마트스토어 마케팅</h2>
+          <p class="lead">검색 플랫폼답게 검색량 증가와 전환이 일어날 수 있는 방향으로 안내해 드립니다.</p>
+        </div>
+        <div class="m-visual mv-ss"><div class="phone-ui"><div class="sb"><span style="color:#03c75a;font-weight:900">N</span> 쇼핑 검색</div><div class="it me"><span class="th"></span><span class="ln"><i></i><i></i></span><span class="badge">우리 상품</span></div><div class="it"><span class="th"></span><span class="ln"><i></i><i></i></span></div><div class="it"><span class="th"></span><span class="ln"><i></i><i></i></span></div></div><span class="big">STORE</span></div>
+      </div>
+      <div class="p-block"><h3>이런 분께 추천해요</h3>
+        <div class="fit"><div><p>검색량에 비해 상품 유입이 적은 경우</p></div><div><p>유입은 있는데 구매 전환이 낮은 경우</p></div><div><p>상품명 · 키워드 방향을 새로 잡고 싶은 경우</p></div></div>
+      </div>
+      <div class="p-block"><h3>진행 방식</h3>
+        <div class="flow4"><div><b>검색 키워드 분석</b><p>검색량과 경쟁 상품 확인</p></div><div><b>유입 설계</b><p>검색량 증가 방향 설계</p></div><div><b>전환 점검</b><p>구매로 이어지는 포인트 확인</p></div><div><b>운영 관리</b><p>결과 확인 후 방향 조정</p></div></div>
+      </div>
+    </article>
+
+    <article class="prod" id="p-place" data-ch="플레이스">
+      <div class="p-head">
+        <div>
+          <span class="p-tag">매장 · 네이버 플레이스</span>
+          <h2>플레이스 마케팅</h2>
+          <p class="lead">순위와 매장의 매출을 결정하는 핵심 요소만 진단 · 제안하며, 매장에 맞는 소형 키워드부터 대형 키워드까지 공략합니다.</p>
+          <a class="p-link" href="/place/">플레이스 마케팅 페이지 자세히 보기 →</a>
+        </div>
+        <div class="m-visual mv-place"><div class="phone-ui"><div class="sb">📍 동네 맛집</div><div class="it me"><span class="th"></span><span class="ln"><i></i><i></i></span><span class="badge">우리 매장</span></div><div class="it"><span class="th"></span><span class="ln"><i></i><i></i></span></div><div class="it"><span class="th"></span><span class="ln"><i></i><i></i></span></div></div><span class="big">PLACE</span></div>
+      </div>
+      <div class="p-block"><h3>우리매장 맞춤형 설계</h3>
+        <div class="items">
+          <div><b>방문자 리뷰</b><p>키워드 반영 리뷰매칭으로 점수 반영과 고객의 신뢰도가 상승하는 리뷰 방식을 수년간 쌓인 데이터로 설계해 드립니다.</p></div>
+          <div><b>블로그 리뷰</b><p>방문자 리뷰와 다른, 자세한 후기 형식의 흥미를 유발하는 리뷰. 플레이스뿐 아니라 외부 유입을 만드는 형식으로도 가능합니다.</p></div>
+          <div><b>저장하기</b><p>유입으로 이어진 고객들의 재방문율과 점수 반영으로 플레이스 순위노출에 도움을 줍니다.</p></div>
+          <div><b>키워드 순위 최적화</b><p>나의 매장에 맞는 소형 키워드 공략부터 대형 키워드까지 노출 확대를 위한 키워드 최적화 공략.</p></div>
+        </div>
+      </div>
+      <div class="p-block quote">
+        <b>진단 후 3개월, 매출 +79.1%</b>
+        <p>맛집 키워드 C 매장 · 4월 플레이스 진단 후 5월 +18.2%, 6월 +51.5%로 이어진 실제 매출 흐름입니다. <a href="/#perf" style="color:#7fb6ff;font-weight:700">진행사례 보기 →</a></p>
+      </div>
+    </article>
+
+    <article class="prod" id="p-search" data-ch="통검탭·바이럴">
+      <div class="p-head">
+        <div>
+          <span class="p-tag">검색 · 네이버 통합검색</span>
+          <h2>통검탭 노출</h2>
+          <p class="lead">실제 전환율이 잘 나오는 네이버 검색화면에 나의 매장 · 상품 · 브랜드 등을 노출해 실제 전환을 만듭니다.</p>
+        </div>
+        <div class="m-visual mv-tab"><div class="phone-ui"><div class="sb"><span style="color:#03c75a;font-weight:900">N</span> 브랜드명 검색</div><div class="it me"><span class="th"></span><span class="ln"><i></i><i></i></span><span class="badge">블로그</span></div><div class="it me"><span class="th"></span><span class="ln"><i></i><i></i></span><span class="badge">카페</span></div><div class="it"><span class="th"></span><span class="ln"><i></i><i></i></span></div></div><span class="big">SEARCH</span></div>
+      </div>
+      <div class="p-block"><h3>노출 영역</h3>
+        <div class="items">
+          <div><b>블로그 탭</b><p>검색 의도에 맞는 후기 · 정보형 콘텐츠로 비교 단계의 신뢰를 만듭니다.</p></div>
+          <div><b>카페 탭</b><p>커뮤니티 안에서 자연스럽게 언급되고 추천되는 흐름을 만듭니다.</p></div>
+          <div><b>지식인 탭</b><p>고객이 실제로 묻는 질문에 우리 매장 · 상품이 답이 되도록 노출합니다.</p></div>
+          <div><b>브랜드 검색 화면</b><p>브랜드명을 검색했을 때 보이는 화면 전체를 신뢰감 있게 구성합니다.</p></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="prod" id="p-viral" data-ch="통검탭·바이럴">
+      <div class="p-head">
+        <div>
+          <span class="p-tag">콘텐츠 · 외부 채널</span>
+          <h2>바이럴 마케팅</h2>
+          <p class="lead">블로그 · 카페 · 커뮤니티 등 외부 채널에서 자연스러운 언급과 후기를 만들어 검색과 방문으로 이어지는 흐름을 넓힙니다.</p>
+        </div>
+        <div class="m-visual mv-viral"><div class="phone-ui"><div class="sb">💬 커뮤니티 후기</div><div class="it"><span class="th"></span><span class="ln"><i></i><i></i></span></div><div class="it me"><span class="th"></span><span class="ln"><i></i><i></i></span><span class="badge">언급 확산</span></div><div class="it"><span class="th"></span><span class="ln"><i></i><i></i></span></div></div><span class="big">VIRAL</span></div>
+      </div>
+      <div class="p-block"><h3>이런 분께 추천해요</h3>
+        <div class="fit"><div><p>이미 기반은 있지만 새로운 유입경로가 필요한 경우</p></div><div><p>브랜드를 처음 알리고 싶은 신규 매장 · 상품</p></div><div><p>검색했을 때 참고할 후기가 부족한 경우</p></div></div>
+      </div>
+      <div class="p-block"><h3>운영 채널</h3>
+        <div class="items">
+          <div><b>블로그</b><p>검색에서 오래 노출되는 상세 후기로 장기 유입 자산을 만듭니다.</p></div>
+          <div><b>카페 · 커뮤니티</b><p>타깃 고객이 모인 곳에서 자연스러운 언급과 추천을 만듭니다.</p></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="prod" id="p-traffic" data-ch="잘 모르겠어요">
+      <div class="p-head">
+        <div>
+          <span class="p-tag">유입 · 노출</span>
+          <h2>트래픽 마케팅</h2>
+          <p class="lead">쇼핑 · 플레이스 채널에서 노출과 유입에 필요한 트래픽 운영을 상품 · 매장 상황에 맞춰 지원합니다.</p>
+        </div>
+        <div class="m-visual mv-shop"><div class="phone-ui"><div class="sb">📈 유입 현황</div><div class="it"><span class="th"></span><span class="ln"><i></i><i></i></span></div><div class="it me"><span class="th"></span><span class="ln"><i></i><i></i></span><span class="badge">유입 증가</span></div><div class="it"><span class="th"></span><span class="ln"><i></i><i></i></span></div></div><span class="big">TRAFFIC</span></div>
+      </div>
+      <div class="p-block"><h3>이런 분께 추천해요</h3>
+        <div class="fit"><div><p>리뷰는 경쟁 상품과 비슷한데 노출이 머물러 있는 경우</p></div><div><p>초기 유입이 필요한 신규 상품 · 매장</p></div><div><p>주요 검색구간을 집중적으로 공략하고 싶은 경우</p></div></div>
+      </div>
+      <div class="p-block"><h3>진행 방식</h3>
+        <div class="flow4"><div><b>현황 확인</b><p>현재 노출 구간과 유입 확인</p></div><div><b>구간 설정</b><p>집중할 키워드 · 검색구간 선정</p></div><div><b>운영</b><p>상황에 맞춘 트래픽 운영</p></div><div><b>강도 조정</b><p>판매 데이터 확인 후 조정</p></div></div>
+      </div>
+    </article>
+
+    <article class="prod" id="p-meta" data-ch="잘 모르겠어요">
+      <div class="p-head">
+        <div>
+          <span class="p-tag">광고 · 인스타그램 · 페이스북</span>
+          <h2>메타광고 설계</h2>
+          <p class="lead">나의 매장 · 상품과 연관된 사람에게 보여지는 광고로, 검색 밖에서 부가적인 매출을 만듭니다.</p>
+        </div>
+        <div class="m-visual mv-viral"><div class="phone-ui"><div class="sb">📱 피드 광고</div><div class="it me"><span class="th"></span><span class="ln"><i></i><i></i></span><span class="badge">타깃 노출</span></div><div class="it"><span class="th"></span><span class="ln"><i></i><i></i></span></div><div class="it"><span class="th"></span><span class="ln"><i></i><i></i></span></div></div><span class="big">META</span></div>
+      </div>
+      <div class="p-block"><h3>이런 분께 추천해요</h3>
+        <div class="fit"><div><p>검색 외 채널에서 새 고객을 만나고 싶은 경우</p></div><div><p>지역 · 연령 · 관심사로 타깃이 분명한 매장 · 상품</p></div><div><p>신메뉴 · 신상품 · 이벤트를 빠르게 알리고 싶은 경우</p></div></div>
+      </div>
+    </article>
+
+    <div class="p-cta">
+      <b id="ctaTitle">우리 상품에 맞는 방향,<br>무료진단으로 먼저 확인하세요</b>
+      <div class="btns">
+        <a class="btn btn-w" id="ctaBtn" href="/#contact">무료진단 받기 →</a>
+        <a class="btn btn-dark" href="https://open.kakao.com/o/szJtwKyi" target="_blank" rel="noopener">카카오톡 상담</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<footer>
+  <div class="inner">
+    <div>
+      <div class="brand"><span class="brand-logo"><img src="/logo.png" alt=""></span><span><b>Y-PLUS</b><small>ONLINE MARKETING</small></span></div>
+      <p>(주)JS컴퍼니&amp;흐름컴퍼니 | 대표자 : 박준성 &amp; 손동혁 | 사업자등록번호 : 899-87-04241</p>
+      <p>주소 : 인천시 부평구 주부토로 236 테크노밸리 U1센터 B동 912호</p>
+      <p>담당 : 유광일 본부장 | 메일 : dakchirau1015@gmail.com | 카카오톡 : uilgg</p>
+      <p>고객센터 : 070-7706-8000 | 팩스 : 032-330-8001</p>
+      <p style="margin-top:18px">© 2026 JS COMPANY &amp; FLOW COMPANY. All rights reserved.</p>
+    </div>
+    <div class="right">
+      <a class="ftel" href="tel:010-3046-7649">010-3046-7649</a>
+      <p>카카오톡 상담은 언제든 남겨 주세요</p>
+      <div class="links"><a href="/place/">플레이스 마케팅</a><a href="https://open.kakao.com/o/szJtwKyi" target="_blank" rel="noopener">카카오톡 상담</a></div>
+    </div>
+  </div>
+</footer>
+
+<div class="float-bar" id="floatBar">
+  <p><em>채널별 맞춤 무료진단</em>을 해주는 업계 1% 마케터 Y-PLUS</p>
+  <a class="btn btn-main" href="/#contact">무료진단 신청</a>
+</div>
+
+<script>
+(function(){
+  var burger = document.getElementById('burger'), menu = document.getElementById('menu');
+  burger.addEventListener('click', function(){ burger.setAttribute('aria-expanded', menu.classList.toggle('open')); });
+
+  var floatBar = document.getElementById('floatBar');
+  function onScroll(){ floatBar.classList.toggle('show', scrollY > 300); }
+  addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  // 주소 끝(#coupang 등)으로 상품을 고른다 — 메인에서 바로 특정 상품으로 들어올 수 있게
+  var sideLinks = [].slice.call(document.querySelectorAll('#side a'));
+  var ctaBtn = document.getElementById('ctaBtn');
+  function show(key, scroll){
+    var el = document.getElementById('p-' + key);
+    if (!el) { key = 'coupang'; el = document.getElementById('p-coupang'); }
+    [].forEach.call(document.querySelectorAll('.prod'), function(p){ p.classList.toggle('on', p === el); });
+    sideLinks.forEach(function(a){
+      var on = a.dataset.p === key;
+      a.classList.toggle('on', on);
+      if (on && a.scrollIntoView && innerWidth <= 900) a.scrollIntoView({block:'nearest', inline:'center'});
+    });
+    ctaBtn.href = '/?ch=' + encodeURIComponent(el.dataset.ch) + '#contact';
+    document.title = el.querySelector('h2').textContent + ' | Y-PLUS 와이플러스';
+    if (scroll) {
+      var top = document.getElementById('prods').getBoundingClientRect().top + scrollY - (innerWidth <= 900 ? 130 : 90);
+      if (scrollY > top) scrollTo(0, top);
+    }
+  }
+  sideLinks.forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      history.replaceState(null, '', '#' + a.dataset.p);
+      show(a.dataset.p, true);
+    });
+  });
+  addEventListener('hashchange', function(){ show(location.hash.slice(1), true); });
+  show(location.hash.slice(1), false);
+})();
+</script>
+</body>
+</html>
