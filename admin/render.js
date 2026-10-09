@@ -115,7 +115,7 @@
   }
 
   function renderList(posts) {
-    // 비노출(hidden) 글은 목록·해시태그·사이트맵·다른 글에서 뺀다
+    // 비노출(hidden) 글은 게시판 목록·해시태그·다른 글에서만 뺀다 (글 페이지·사이트맵은 남겨 검색엔진이 인식)
     var list = posts.filter(function (p) { return !p.hidden; }).sort(function (a, b) { return a.date < b.date ? 1 : -1; });
     var tagCount = {};
     list.forEach(function (p) { (p.tags || []).forEach(function (t) { tagCount[t] = (tagCount[t] || 0) + 1; }); });
@@ -166,7 +166,7 @@
   function renderSitemap(posts) {
     var today = new Date().toISOString().slice(0, 10);
     var urls = [['/', today, '1.0'], ['/products/', today, '0.9'], ['/board/', today, '0.8']];
-    posts.filter(function (p) { return !p.hidden; }).forEach(function (p) { urls.push(['/board/' + encodeURIComponent(p.slug) + '/', (p.updated || p.date).slice(0, 10), '0.7']); });
+    posts.forEach(function (p) { urls.push(['/board/' + encodeURIComponent(p.slug) + '/', (p.updated || p.date).slice(0, 10), '0.7']); });
     return '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
       urls.map(function (u) { return '  <url>\n    <loc>' + SITE + u[0] + '</loc>\n    <lastmod>' + u[1] + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>' + u[2] + '</priority>\n  </url>'; }).join('\n') +
       '\n</urlset>\n';

@@ -233,7 +233,7 @@
         var d = document.createElement('div'); d.className = 'item';
         d.innerHTML = '<div><b></b><span></span></div><button class="btn btn-dark btn-s tg"></button><a class="btn btn-dark btn-s" target="_blank" rel="noopener">보기</a><button class="btn btn-main btn-s ed">수정</button>';
         d.querySelector('b').textContent = p.title;
-        if (p.hidden) { d.classList.add('off'); d.querySelector('b').insertAdjacentHTML('afterbegin', '<span class="badge-off">비노출</span>'); d.querySelector('a').classList.add('hide'); }
+        if (p.hidden) { d.classList.add('off'); d.querySelector('b').insertAdjacentHTML('afterbegin', '<span class="badge-off">비노출</span>'); }
         d.querySelector('.tg').textContent = p.hidden ? '노출하기' : '숨기기';
         d.querySelector('.tg').onclick = function(){ toggleHidden(p, this); };
         d.querySelector('span').textContent = R.fmtDate(p.date) + ((p.tags || []).length ? ' · #' + p.tags.join(' #') : '');
@@ -272,7 +272,7 @@
     dirty = true;
     if (!editing && !$('fSlug').dataset.touched) { $('fSlug').value = R.slugify($('fTitle').value); $('slugShow').textContent = $('fSlug').value; }
   };
-  function showTxt(){ $('fShowTxt').textContent = $('fShow').checked ? '손님에게 보여요' : '비노출 — 게시판·검색에 안 보여요 (관리자만 봄)'; }
+  function showTxt(){ $('fShowTxt').textContent = $('fShow').checked ? '손님에게 보여요' : '비노출 — 게시판 목록에서만 숨겨요 (검색엔진에는 그대로 노출)'; }
   $('fShow').onchange = function(){ showTxt(); dirty = true; };
   $('fSlug').oninput = function(){ $('fSlug').dataset.touched = '1'; $('slugShow').textContent = R.slugify($('fSlug').value); };
   ['fSum', 'fTags'].forEach(function(id){ $(id).oninput = function(){ dirty = true; }; });
@@ -372,24 +372,18 @@
   function meta(p){ return { slug: p.slug, title: p.title, summary: p.summary, excerpt: R.summaryOf(p), tags: p.tags, date: p.date, updated: p.updated, cover: R.coverOf(p), hidden: !!p.hidden }; }
 
   // 목록·사이트맵·모든 글의 '다른 글'을 다시 만든다
-  function rebuild(list, changed, prev){
-    var shown = list.filter(function(m){ return !m.hidden; });
-    return Promise.all(shown.filter(function(m){ return !changed || m.slug !== changed.slug; }).map(function(m){
+  function rebuild(list, changed){
+    return Promise.all(list.filter(function(m){ return !changed || m.slug !== changed.slug; }).map(function(m){
       return readJson('board/data/' + m.slug + '.json');
     })).then(function(datas){
       var full = datas.filter(Boolean);
-      if (changed && !changed.hidden) full.push(changed);
+      if (changed) full.push(changed);
       var files = [
         { path: 'board/posts.json', content: JSON.stringify(list, null, 1) + '\n' },
         { path: 'board/index.html', content: R.renderList(list) },
         { path: 'sitemap.xml', content: R.renderSitemap(list) }
       ];
       full.forEach(function(p){ files.push({ path: 'board/' + p.slug + '/index.html', content: R.renderPost(p, list) }); });
-      (prev || []).forEach(function(o){
-        if (o.hidden) return;
-        var now = list.filter(function(m){ return m.slug === o.slug; })[0];
-        if (now && now.hidden) files.push({ path: 'board/' + o.slug + '/index.html', remove: true });
-      });
       return files;
     });
   }
@@ -421,14 +415,14 @@
         date: editing ? editing.date : now, updated: now, cover: '', hidden: !$('fShow').checked };
       var list = posts.filter(function(p){ return p.slug !== post.slug; }).concat([meta(post)]);
       status(n ? '사진 ' + n + '장과 함께 올리는 중…' : '올리는 중…');
-      return rebuild(list, post, posts).then(function(rest){
+      return rebuild(list, post).then(function(rest){
         files.push({ path: 'board/data/' + post.slug + '.json', content: JSON.stringify(post, null, 1) + '\n' });
         return commit(files.concat(rest), (editing ? '게시판 글 수정: ' : '게시판 새 글: ') + post.title);
       }).then(function(){
         dirty = false; editing = post; posts = list;
         $('fSlug').value = post.slug; $('fSlug').disabled = true; $('slugShow').textContent = post.slug;
         $('editor').innerHTML = post.content; $('delBtn').classList.remove('hide');
-        status(post.hidden ? '비노출로 저장했어요 (게시판에 안 보여요)' : '발행 완료! 1~2분 뒤 게시판에 보여요', true);
+        status(post.hidden ? '비노출로 저장했어요 (목록엔 안 보이고 검색엔진엔 노출)' : '발행 완료! 1~2분 뒤 게시판에 보여요', true);
       });
     }).catch(function(e){
       status('');
@@ -442,11 +436,9 @@
     busy = true; status('삭제 중…');
     var slug = editing.slug;
     readJson('board/posts.json').then(function(latest){
-      var was = (latest || []).filter(function(p){ return p.slug === slug; })[0];
       var list = (latest || []).filter(function(p){ return p.slug !== slug; });
       return rebuild(list, null).then(function(files){
-        files.push({ path: 'board/data/' + slug + '.json', remove: true });
-        if (!was || !was.hidden) files.push({ path: 'board/' + slug + '/index.html', remove: true });
+        files.push({ path: 'board/data/' + slug + '.json', remove: true }, { path: 'board/' + slug + '/index.html', remove: true });
         return commit(files, '게시판 글 삭제: ' + editing.title);
       });
     }).then(function(){ dirty = false; busy = false; alert('삭제했어요. 1~2분 뒤 게시판에서 사라져요.'); loadList(); },
@@ -456,14 +448,14 @@
   function toggleHidden(p, btn){
     if (busy) return;
     var hide = !p.hidden;
-    if (!confirm('"' + p.title + '" 글을 ' + (hide ? '숨길까요? 게시판·검색에서 안 보이게 됩니다.' : '다시 게시판에 노출할까요?'))) return;
+    if (!confirm('"' + p.title + '" 글을 ' + (hide ? '게시판 목록에서 숨길까요? 검색엔진에는 그대로 남아요.' : '다시 게시판 목록에 노출할까요?'))) return;
     busy = true; btn.textContent = '바꾸는 중…'; btn.disabled = true;
     Promise.all([readJson('board/posts.json'), readJson('board/data/' + p.slug + '.json')]).then(function(r){
       var latest = r[0] || [], data = r[1];
       if (!data) throw new Error('글 원본을 찾지 못했어요');
       data.hidden = hide;
       var list = latest.map(function(m){ return m.slug === p.slug ? meta(data) : m; });
-      return rebuild(list, data, latest).then(function(files){
+      return rebuild(list, data).then(function(files){
         files.push({ path: 'board/data/' + p.slug + '.json', content: JSON.stringify(data, null, 1) + '\n' });
         return commit(files, (hide ? '게시판 글 비노출: ' : '게시판 글 노출: ') + p.title);
       });
