@@ -442,3 +442,9 @@ footer .links a{color:rgba(255,255,255,.75)}
 /* 숫자 카드 아이콘 */
 .stat .ico{display:flex;align-items:center;justify-content:center;height:96px;margin:0 auto 10px}
 .stat .ico img{max-height:96px;width:auto}
+
+/* 바이럴 사례: 작은 캡처 3장은 늘리지 않고 원래 크기로 가운데 */
+.sales-small figure{display:flex;flex-direction:column}
+.sales-small img{aspect-ratio:auto;width:auto;max-width:100%;height:auto;object-fit:contain;margin:0 auto;padding:14px 0;background:transparent}
+.sales-small figure{background:#fff}
+.sales-small figcaption{margin-top:auto;background:var(--card);color:#fff}
