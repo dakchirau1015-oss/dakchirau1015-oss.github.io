@@ -205,7 +205,8 @@ header{position:fixed;inset:0 0 auto 0;z-index:50;background:rgba(17,16,20,.72);
 .about .chips span{background:rgba(47,140,255,.16);color:#b6d4ff;border-radius:999px;font-weight:600}
 .about-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .pcard{grid-row:span 2;border-radius:22px;overflow:hidden;background:linear-gradient(180deg,#eef4ff,#c8d8f0);position:relative;min-height:380px}
-.pcard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 18%;transform:scale(1.55);transform-origin:50% 22%}
+/* kwangil-card.png 은 얼굴이 가운데 오게 잘라 둔 사진 */
+.pcard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 0}
 .pcard .nm{position:absolute;left:14px;right:14px;bottom:14px;background:rgba(17,16,20,.82);backdrop-filter:blur(8px);border-radius:14px;padding:12px 14px}
 .pcard .nm b{display:block;font-size:17px}
 .pcard .nm span{font-size:12.5px;color:var(--mute)}

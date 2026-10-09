@@ -3,7 +3,7 @@
    만드는 파일: board/index.html, board/<slug>/index.html, sitemap.xml */
 (function (root) {
   var SITE = 'https://yydplus.co.kr';
-  var CSS_VER = '7';
+  var CSS_VER = '8';
   var KAKAO = 'https://open.kakao.com/o/szJtwKyi';
 
   function esc(s) {
