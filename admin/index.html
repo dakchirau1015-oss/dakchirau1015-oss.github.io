@@ -46,6 +46,15 @@
   .bar .in2{max-width:900px;margin:0 auto;padding:12px 20px;display:flex;gap:8px;justify-content:flex-end;align-items:center}
   .bar .st{margin-right:auto;font-size:14px;color:var(--mute)}
   .hide{display:none!important}
+  .sw{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:15px}
+  .sw input{display:none}
+  .sw span{width:46px;height:26px;border-radius:99px;background:rgba(255,255,255,.18);position:relative;transition:.2s;flex:none}
+  .sw span::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
+  .sw input:checked+span{background:var(--point)}
+  .sw input:checked+span::after{left:23px}
+  .sw small{color:var(--mute);font-size:13px}
+  .badge-off{display:inline-block;font-size:11.5px;font-weight:800;color:#ffb4b4;background:rgba(255,80,80,.16);padding:2px 8px;border-radius:99px;margin-right:6px;vertical-align:2px}
+  .list .item.off b{color:var(--mute)}
   .msg{margin-top:12px;font-size:14px;color:#ff8a8a}
   .ok{color:var(--point)}
 </style>
@@ -111,6 +120,7 @@
         <div class="editor post-body" id="editor" contenteditable="true"></div>
         <input type="file" id="imgFile" accept="image/*" multiple hidden>
       </div>
+      <div class="field"><label class="sw"><input type="checkbox" id="fShow" checked><span></span><b>게시판에 노출</b><small id="fShowTxt">손님에게 보여요</small></label></div>
       <div class="field"><label class="l" for="fTags">해시태그<small>쉼표나 띄어쓰기로 구분 · 예) 쿠팡마케팅, 플레이스, 매출</small></label><input class="in" id="fTags" placeholder="쿠팡마케팅 플레이스 매출"></div>
     </div>
     <div class="row" style="margin-top:16px"><button class="btn btn-red btn-s hide" id="delBtn">이 글 삭제</button></div>
@@ -221,11 +231,14 @@
       $('postList').innerHTML = sorted.length ? '' : '<p class="muted">아직 글이 없어요. [+ 새 글 쓰기]로 첫 글을 올려보세요.</p>';
       sorted.forEach(function(p){
         var d = document.createElement('div'); d.className = 'item';
-        d.innerHTML = '<div><b></b><span></span></div><a class="btn btn-dark btn-s" target="_blank" rel="noopener">보기</a><button class="btn btn-main btn-s">수정</button>';
+        d.innerHTML = '<div><b></b><span></span></div><button class="btn btn-dark btn-s tg"></button><a class="btn btn-dark btn-s" target="_blank" rel="noopener">보기</a><button class="btn btn-main btn-s ed">수정</button>';
         d.querySelector('b').textContent = p.title;
+        if (p.hidden) { d.classList.add('off'); d.querySelector('b').insertAdjacentHTML('afterbegin', '<span class="badge-off">비노출</span>'); d.querySelector('a').classList.add('hide'); }
+        d.querySelector('.tg').textContent = p.hidden ? '노출하기' : '숨기기';
+        d.querySelector('.tg').onclick = function(){ toggleHidden(p, this); };
         d.querySelector('span').textContent = R.fmtDate(p.date) + ((p.tags || []).length ? ' · #' + p.tags.join(' #') : '');
         d.querySelector('a').href = '/board/' + encodeURIComponent(p.slug) + '/';
-        d.querySelector('button').onclick = function(){ openEditor(p.slug); };
+        d.querySelector('.ed').onclick = function(){ openEditor(p.slug); };
         $('postList').appendChild(d);
       });
     });
@@ -249,6 +262,7 @@
       $('slugShow').textContent = p ? p.slug : '';
       $('fSum').value = p ? (p.summary || '') : '';
       $('fTags').value = p ? (p.tags || []).join(', ') : '';
+      $('fShow').checked = !(p && p.hidden); showTxt();
       $('editor').innerHTML = p ? p.content : '';
       $('delBtn').classList.toggle('hide', !p);
       show('vEdit');
@@ -258,6 +272,8 @@
     dirty = true;
     if (!editing && !$('fSlug').dataset.touched) { $('fSlug').value = R.slugify($('fTitle').value); $('slugShow').textContent = $('fSlug').value; }
   };
+  function showTxt(){ $('fShowTxt').textContent = $('fShow').checked ? '손님에게 보여요' : '비노출 — 게시판·검색에 안 보여요 (관리자만 봄)'; }
+  $('fShow').onchange = function(){ showTxt(); dirty = true; };
   $('fSlug').oninput = function(){ $('fSlug').dataset.touched = '1'; $('slugShow').textContent = R.slugify($('fSlug').value); };
   ['fSum', 'fTags'].forEach(function(id){ $(id).oninput = function(){ dirty = true; }; });
   $('editor').oninput = function(){ dirty = true; };
@@ -353,21 +369,27 @@
   };
 
   // ---------- 발행 ----------
-  function meta(p){ return { slug: p.slug, title: p.title, summary: p.summary, excerpt: R.summaryOf(p), tags: p.tags, date: p.date, updated: p.updated, cover: R.coverOf(p) }; }
+  function meta(p){ return { slug: p.slug, title: p.title, summary: p.summary, excerpt: R.summaryOf(p), tags: p.tags, date: p.date, updated: p.updated, cover: R.coverOf(p), hidden: !!p.hidden }; }
 
   // 목록·사이트맵·모든 글의 '다른 글'을 다시 만든다
-  function rebuild(list, changed){
-    return Promise.all(list.filter(function(m){ return !changed || m.slug !== changed.slug; }).map(function(m){
+  function rebuild(list, changed, prev){
+    var shown = list.filter(function(m){ return !m.hidden; });
+    return Promise.all(shown.filter(function(m){ return !changed || m.slug !== changed.slug; }).map(function(m){
       return readJson('board/data/' + m.slug + '.json');
     })).then(function(datas){
       var full = datas.filter(Boolean);
-      if (changed) full.push(changed);
+      if (changed && !changed.hidden) full.push(changed);
       var files = [
         { path: 'board/posts.json', content: JSON.stringify(list, null, 1) + '\n' },
         { path: 'board/index.html', content: R.renderList(list) },
         { path: 'sitemap.xml', content: R.renderSitemap(list) }
       ];
       full.forEach(function(p){ files.push({ path: 'board/' + p.slug + '/index.html', content: R.renderPost(p, list) }); });
+      (prev || []).forEach(function(o){
+        if (o.hidden) return;
+        var now = list.filter(function(m){ return m.slug === o.slug; })[0];
+        if (now && now.hidden) files.push({ path: 'board/' + o.slug + '/index.html', remove: true });
+      });
       return files;
     });
   }
@@ -396,17 +418,17 @@
       });
       var now = new Date().toISOString();
       var post = { slug: g.slug, title: g.title, summary: g.summary, tags: g.tags, content: g.box.innerHTML,
-        date: editing ? editing.date : now, updated: now, cover: '' };
+        date: editing ? editing.date : now, updated: now, cover: '', hidden: !$('fShow').checked };
       var list = posts.filter(function(p){ return p.slug !== post.slug; }).concat([meta(post)]);
       status(n ? '사진 ' + n + '장과 함께 올리는 중…' : '올리는 중…');
-      return rebuild(list, post).then(function(rest){
+      return rebuild(list, post, posts).then(function(rest){
         files.push({ path: 'board/data/' + post.slug + '.json', content: JSON.stringify(post, null, 1) + '\n' });
         return commit(files.concat(rest), (editing ? '게시판 글 수정: ' : '게시판 새 글: ') + post.title);
       }).then(function(){
         dirty = false; editing = post; posts = list;
         $('fSlug').value = post.slug; $('fSlug').disabled = true; $('slugShow').textContent = post.slug;
         $('editor').innerHTML = post.content; $('delBtn').classList.remove('hide');
-        status('발행 완료! 1~2분 뒤 게시판에 보여요', true);
+        status(post.hidden ? '비노출로 저장했어요 (게시판에 안 보여요)' : '발행 완료! 1~2분 뒤 게시판에 보여요', true);
       });
     }).catch(function(e){
       status('');
@@ -420,14 +442,34 @@
     busy = true; status('삭제 중…');
     var slug = editing.slug;
     readJson('board/posts.json').then(function(latest){
+      var was = (latest || []).filter(function(p){ return p.slug === slug; })[0];
       var list = (latest || []).filter(function(p){ return p.slug !== slug; });
       return rebuild(list, null).then(function(files){
-        files.push({ path: 'board/data/' + slug + '.json', remove: true }, { path: 'board/' + slug + '/index.html', remove: true });
+        files.push({ path: 'board/data/' + slug + '.json', remove: true });
+        if (!was || !was.hidden) files.push({ path: 'board/' + slug + '/index.html', remove: true });
         return commit(files, '게시판 글 삭제: ' + editing.title);
       });
     }).then(function(){ dirty = false; busy = false; alert('삭제했어요. 1~2분 뒤 게시판에서 사라져요.'); loadList(); },
       function(e){ busy = false; status(''); alert('삭제 실패: ' + e.message); });
   };
+
+  function toggleHidden(p, btn){
+    if (busy) return;
+    var hide = !p.hidden;
+    if (!confirm('"' + p.title + '" 글을 ' + (hide ? '숨길까요? 게시판·검색에서 안 보이게 됩니다.' : '다시 게시판에 노출할까요?'))) return;
+    busy = true; btn.textContent = '바꾸는 중…'; btn.disabled = true;
+    Promise.all([readJson('board/posts.json'), readJson('board/data/' + p.slug + '.json')]).then(function(r){
+      var latest = r[0] || [], data = r[1];
+      if (!data) throw new Error('글 원본을 찾지 못했어요');
+      data.hidden = hide;
+      var list = latest.map(function(m){ return m.slug === p.slug ? meta(data) : m; });
+      return rebuild(list, data, latest).then(function(files){
+        files.push({ path: 'board/data/' + p.slug + '.json', content: JSON.stringify(data, null, 1) + '\n' });
+        return commit(files, (hide ? '게시판 글 비노출: ' : '게시판 글 노출: ') + p.title);
+      });
+    }).then(function(){ busy = false; loadList(); },
+      function(e){ busy = false; btn.disabled = false; btn.textContent = hide ? '숨기기' : '노출하기'; alert('바꾸지 못했어요: ' + e.message); });
+  }
 
   // ---------- 시작 ----------
   var saved = loadToken();

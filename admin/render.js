@@ -115,7 +115,8 @@
   }
 
   function renderList(posts) {
-    var list = posts.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+    // 비노출(hidden) 글은 목록·해시태그·사이트맵·다른 글에서 뺀다
+    var list = posts.filter(function (p) { return !p.hidden; }).sort(function (a, b) { return a.date < b.date ? 1 : -1; });
     var tagCount = {};
     list.forEach(function (p) { (p.tags || []).forEach(function (t) { tagCount[t] = (tagCount[t] || 0) + 1; }); });
     var tags = Object.keys(tagCount).sort(function (a, b) { return tagCount[b] - tagCount[a] || (a < b ? -1 : 1); });
@@ -138,7 +139,7 @@
   }
 
   function renderPost(post, posts) {
-    var others = posts.filter(function (p) { return p.slug !== post.slug; })
+    var others = posts.filter(function (p) { return p.slug !== post.slug && !p.hidden; })
       .sort(function (a, b) { return a.date < b.date ? 1 : -1; }).slice(0, 3);
     var path = '/board/' + encodeURIComponent(post.slug) + '/';
     var ld = JSON.stringify({
@@ -165,7 +166,7 @@
   function renderSitemap(posts) {
     var today = new Date().toISOString().slice(0, 10);
     var urls = [['/', today, '1.0'], ['/products/', today, '0.9'], ['/board/', today, '0.8']];
-    posts.forEach(function (p) { urls.push(['/board/' + encodeURIComponent(p.slug) + '/', (p.updated || p.date).slice(0, 10), '0.7']); });
+    posts.filter(function (p) { return !p.hidden; }).forEach(function (p) { urls.push(['/board/' + encodeURIComponent(p.slug) + '/', (p.updated || p.date).slice(0, 10), '0.7']); });
     return '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
       urls.map(function (u) { return '  <url>\n    <loc>' + SITE + u[0] + '</loc>\n    <lastmod>' + u[1] + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>' + u[2] + '</priority>\n  </url>'; }).join('\n') +
       '\n</urlset>\n';
