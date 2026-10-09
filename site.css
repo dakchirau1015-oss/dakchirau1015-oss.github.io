@@ -433,3 +433,10 @@ footer .links a{color:rgba(255,255,255,.75)}
   .post-cta{padding:26px 22px}
   .post-cta .btns,.post-cta .btn{width:100%}
 }
+
+/* 바이럴 사례: 캡처 한 장 */
+.sales-one{grid-template-columns:1fr;max-width:760px;margin-left:auto;margin-right:auto}
+.sales-one img{aspect-ratio:auto;object-fit:contain;background:#fff}
+
+/* 숫자 카드 아이콘 */
+.stat .ico{display:block;width:96px;height:72px;margin:0 auto 16px;filter:drop-shadow(0 8px 18px rgba(47,140,255,.25))}
